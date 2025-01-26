@@ -1,0 +1,27 @@
+package com.cab.service;
+
+import com.cab.entity.CabBooking;
+import com.cab.repo.CabBookingRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CabBookingService {
+
+    @Autowired
+    private CabBookingRepo cabBookingRepository;
+
+    public CabBooking bookCab(CabBooking cabBooking) {
+        // Simulate fare calculation (or call another microservice for fare calculation)
+        double fare = calculateFare(cabBooking);
+        cabBooking.setFare(fare);
+
+        // Save the booking to the database
+        return cabBookingRepository.save(cabBooking);
+    }
+
+    private double calculateFare(CabBooking cabBooking) {
+        // Simple random fare calculation for demonstration
+        return 50.0 + (Math.random() * 100);
+    }
+}

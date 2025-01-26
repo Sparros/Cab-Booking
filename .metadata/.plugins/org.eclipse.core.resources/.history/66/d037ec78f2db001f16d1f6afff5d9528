@@ -1,0 +1,43 @@
+package com.cab.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+@Controller
+@RequestMapping("/fare-calculation")
+public class FareCalculationController {
+
+    @Autowired
+    private RestTemplate restTemplate; // Autowire RestTemplate
+
+    // URL of the fare calculation microservice
+    private static final String FARE_CALCULATION_URL = "http://localhost:8081/fare-calculation/calculate-fare";
+
+    // Method to show the form
+    @GetMapping("/")
+    public String showFareCalculationForm() {
+        return "fareCalculation"; // The JSP page
+    }
+
+    // Method to handle the form submission and calculate fare
+    @PostMapping("/calculate-fare")
+    public String calculateFare(@RequestParam String source, @RequestParam String destination, Model model) {
+        // Create the request URL
+        String url = FARE_CALCULATION_URL + "?source=" + source + "&destination=" + destination;
+
+        // Make a GET request to the Fare Calculation microservice
+        ResponseEntity<Double> response = restTemplate.exchange(url, HttpMethod.GET, null, Double.class);
+
+        // Get the fare from the response and add it to the model
+        Double fare = response.getBody();
+        model.addAttribute("fare", fare); // Add the fare to the model
+
+        // Return the same JSP page to display the fare result
+        return "fareCalculation"; 
+    }
+}

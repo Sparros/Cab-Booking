@@ -1,0 +1,5 @@
+package com.cab.entity;
+
+public class cabBooking {
+
+}

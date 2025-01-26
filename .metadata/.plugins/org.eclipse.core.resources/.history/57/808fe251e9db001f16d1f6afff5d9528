@@ -1,0 +1,9 @@
+package com.cab.service;
+
+@Service
+public class FareCalculationService {
+    public double calculateFare(double distance) {
+        // Example: Basic fare calculation logic
+        return distance * 1.5; // Just an example multiplier
+    }
+}

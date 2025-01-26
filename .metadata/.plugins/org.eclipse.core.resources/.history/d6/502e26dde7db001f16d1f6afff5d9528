@@ -1,0 +1,27 @@
+package com.cab.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.demo.cabbooking.model.CabBooking;
+import com.demo.cabbooking.service.CabBookingService;
+
+@RestController
+@RequestMapping("/cab-booking")
+public class CabBookingController {
+
+    @Autowired
+    private CabBookingService cabBookingService;
+
+    @PostMapping("/book-cab")
+    public String bookCab(@ModelAttribute CabBooking cabBooking) {
+        cabBookingService.bookCab(cabBooking);
+        return "Booking Successful";
+    }
+
+    @GetMapping("/")
+    public ModelAndView showBookingForm() {
+        return new ModelAndView("index");
+    }
+}

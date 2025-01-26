@@ -1,0 +1,28 @@
+package com.cab.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.cab.service.FareCalculationService;
+
+import org.springframework.ui.Model;
+
+@RestController
+@RequestMapping("/fare-calculation")
+public class FareCalculationController {
+
+    @Autowired
+    private FareCalculationService fareCalculationService;
+
+    @PostMapping("/calculate-fare")
+    public String calculateFare(@RequestParam String source, @RequestParam String destination, Model model) {
+        double fare = fareCalculationService.calculateFare(source, destination);
+        model.addAttribute("fare", fare); // Send the calculated fare to the page
+        return "fareCalculation"; // Return the same page (fareCalculation.jsp)
+    }
+
+    @GetMapping("/")
+    public String showFareCalculationForm() {
+        return "fareCalculation"; // Show the fare calculation form page (fareCalculation.jsp)
+    }
+}

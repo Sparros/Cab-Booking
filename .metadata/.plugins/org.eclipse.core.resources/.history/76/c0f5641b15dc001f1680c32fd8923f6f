@@ -1,0 +1,30 @@
+package com.cab.controller;
+
+import com.cab.entity.CabBooking;
+import com.cab.service.CabBookingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/cab-booking")
+public class CabBookingController {
+
+    @Autowired
+    private CabBookingService cabBookingService;
+
+    // Endpoint to book a cab and return the details to the same page
+    @PostMapping("/book-cab")
+    public String bookCab(@ModelAttribute CabBooking cabBooking, Model model) {
+        // Book the cab using the service
+        CabBooking bookedCab = cabBookingService.bookCab(cabBooking);
+
+        // Add the booking details and message to the model
+        model.addAttribute("message", "Booking Successful!");
+        model.addAttribute("cabBooking", bookedCab); // Pass the booked cab details back to the view
+
+        // Return the same view to show the updated booking details
+        return "bookCabForms"; // The form should be in the bookCabForms.jsp view
+    }
+}

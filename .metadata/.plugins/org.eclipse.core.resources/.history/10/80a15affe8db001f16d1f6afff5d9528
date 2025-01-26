@@ -1,0 +1,18 @@
+package com.cab.service;
+
+import com.cab.entity.CabBooking;
+import com.cab.repo.CabBookingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CabBookingService {
+
+    @Autowired
+    private CabBookingRepository cabBookingRepository;
+
+    public CabBooking bookCab(CabBooking cabBooking) {
+        // Save the booking to the database
+        return cabBookingRepository.save(cabBooking);
+    }
+}

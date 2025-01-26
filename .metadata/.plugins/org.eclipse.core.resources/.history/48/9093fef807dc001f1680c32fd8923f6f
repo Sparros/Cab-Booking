@@ -1,0 +1,31 @@
+package com.cab.controller;
+
+@Controller
+@RequestMapping("/fare-calculation")
+public class FareCalculationController {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    // Backend microservice URL
+    private static final String BACKEND_URL = "http://localhost:8081/fare-calculation/calculate-fare";
+
+    // Show the form
+    @GetMapping("/")
+    public String showFareCalculationForm() {
+        return "fareCalculation"; // Renders fareCalculation.jsp
+    }
+
+    // Handle form submission
+    @PostMapping("/calculate-fare")
+    public String calculateFare(@RequestParam String source, @RequestParam String destination, Model model) {
+        // Forward the request to the backend microservice
+        String url = BACKEND_URL + "?source=" + source + "&destination=" + destination;
+        Double fare = restTemplate.getForObject(url, Double.class);
+
+        // Add the fare to the model to display in the JSP
+        model.addAttribute("fare", fare);
+        return "fareCalculation";
+    }
+}
+

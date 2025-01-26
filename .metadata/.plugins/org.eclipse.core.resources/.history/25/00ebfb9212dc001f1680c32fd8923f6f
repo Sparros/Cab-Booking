@@ -1,0 +1,38 @@
+package com.cab.controller;
+
+import com.cab.model.Cab;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+@Controller
+@RequestMapping("/cab-booking")
+public class CabBookingController {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    // The URL of the cab booking microservice
+    private static final String CAB_BOOKING_URL = "http://localhost:8081/cab-booking/book-cab";
+
+    // Show the cab booking form
+    @GetMapping("/book-cab")
+    public String showCabBookingForm(Model model) {
+        model.addAttribute("cabBooking", new Cab());
+        return "bookCab"; // JSP view for the booking form
+    }
+
+    // Handle form submission to book a cab
+    @PostMapping("/book-cab")
+    public String bookCab(@ModelAttribute Cab cab, Model model) {
+        // Call the backend (Cab Booking Microservice) to create a booking
+        String url = CAB_BOOKING_URL;
+        Cab bookingResponse = restTemplate.postForObject(url, cab, Cab.class);
+
+        // Add the booking information to the model (including fare and ID)
+        model.addAttribute("message", "Booking Successful! Booking ID: " + bookingResponse.getId() + ", Fare: £" + bookingResponse.getFare());
+        return "bookCab"; // Show the same form with success message
+    }
+}

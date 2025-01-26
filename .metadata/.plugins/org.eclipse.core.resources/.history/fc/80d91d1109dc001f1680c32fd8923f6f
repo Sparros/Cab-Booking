@@ -1,0 +1,19 @@
+package com.cab.service;
+
+import java.math.BigDecimal;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class FareCalculationService {
+
+	public double calculateFare(String source, String destination) {
+	    // Basic fare calculation with random generation
+	    double fare = 50.0 + (Math.random() * 100);
+
+	    // Round to 2 decimal places
+	    BigDecimal roundedFare = BigDecimal.valueOf(fare).setScale(2, RoundingMode.HALF_UP);
+
+	    return roundedFare.doubleValue(); 
+	}
+}

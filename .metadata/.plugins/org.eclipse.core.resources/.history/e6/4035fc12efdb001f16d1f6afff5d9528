@@ -1,0 +1,19 @@
+package com.fare.controller;
+
+import com.fare.service.FareCalculationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/fare-calculation")
+public class FareCalculationController {
+
+    @Autowired
+    private FareCalculationService fareCalculationService;
+
+    // Endpoint to calculate the fare
+    @PostMapping("/calculate")
+    public double calculateFare(@RequestBody String source, @RequestBody String destination) {
+        return fareCalculationService.calculateFare(source, destination);
+    }
+}

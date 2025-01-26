@@ -1,0 +1,9 @@
+package com.cab.service;
+
+@Service
+public class CabBookingService {
+    public void bookCab(CabBooking cabBooking) {
+        // Save the booking to the database (or perform any necessary operations)
+        System.out.println("Cab booked: " + cabBooking.getSource() + " to " + cabBooking.getDestination());
+    }
+}

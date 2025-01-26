@@ -1,0 +1,6 @@
+# Cab Frontend Microservice Configuration
+spring.application.name=cab-frontend  
+server.port=8080  
+
+# URL of the Fare Calculation microservice
+fare.calculation.service.url=http://localhost:8081/fare-calculation/calculate-fare  # Ensure this URL points to the right microservice

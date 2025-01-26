@@ -1,0 +1,12 @@
+package com.fare.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class FareCalculationService {
+
+    public double calculateFare(String source, String destination) {
+        // Basic fare calculation, just for example
+        return 50.0 + (Math.random() * 100); // Random fare generation
+    }
+}

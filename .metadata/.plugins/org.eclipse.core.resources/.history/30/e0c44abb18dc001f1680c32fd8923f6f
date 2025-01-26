@@ -1,0 +1,63 @@
+package com.cab;
+
+import com.cab.controller.CabBookingController;
+import com.cab.model.Cab;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+public class CabBookingControllerTest {
+
+    private MockMvc mockMvc;
+
+    @Mock
+    private RestTemplate restTemplate;
+
+    @InjectMocks
+    private CabBookingController cabBookingController;
+
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(cabBookingController).build();
+    }
+
+    @Test
+    public void testBookCab() throws Exception {
+        // Prepare mock data
+        Cab cab = new Cab();
+        cab.setSource("London");
+        cab.setDestination("Manchester");
+
+        // Prepare mocked response
+        Cab bookingResponse = new Cab();
+        bookingResponse.setId(1L);
+        bookingResponse.setSource("London");
+        bookingResponse.setDestination("Manchester");
+        bookingResponse.setFare(45.5);
+
+        // Mock the RestTemplate call
+        when(restTemplate.postForObject(anyString(), eq(cab), eq(Cab.class))).thenReturn(bookingResponse);
+
+        // Perform the POST request and verify the response
+        mockMvc.perform(post("/cab-booking/book-cab")
+                        .param("source", "London")
+                        .param("destination", "Manchester"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("message", "Booking Successful!"))  // We just check for the success message here
+                .andExpect(model().attribute("cabBooking", bookingResponse)) // Check if the booking response is in the model
+                .andExpect(view().name("bookCab"));  // The view should be 'bookCab'
+
+        // Verify that the RestTemplate was called once
+        verify(restTemplate, times(1)).postForObject(anyString(), eq(cab), eq(Cab.class));
+    }
+}

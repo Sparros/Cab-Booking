@@ -1,0 +1,25 @@
+package com.cab.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class FrontendController {
+
+    @GetMapping("/")
+    public String showBookingPage(Model model) {
+        return "index";  
+    }
+
+    @RequestMapping("/bookcab")
+    public String bookCabForm() {
+        return "bookcabForm";  // Will resolve to /WEB-INF/views/bookcabForm.jsp
+    }
+
+    @RequestMapping("/farecalculation")
+    public String fareCalculation() {
+        return "farecalculation";  // Will resolve to /WEB-INF/views/farecalculation.jsp
+    }
+}

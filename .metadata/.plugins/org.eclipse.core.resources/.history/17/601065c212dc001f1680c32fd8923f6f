@@ -1,0 +1,22 @@
+package com.cab.controller;
+
+import com.cab.entity.CabBooking;
+import com.cab.service.CabBookingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/cab-booking")
+public class CabBookingController {
+
+    @Autowired
+    private CabBookingService cabBookingService;
+
+    // Endpoint to book a cab
+    @PostMapping("/book-cab")
+    public String bookCab(@RequestBody CabBooking cabBooking) {
+        CabBooking bookedCab = cabBookingService.bookCab(cabBooking);
+        return "Booking Successful! Booking ID: " + bookedCab.getId() + ", Fare: " + bookedCab.getFare();
+    }
+
+}

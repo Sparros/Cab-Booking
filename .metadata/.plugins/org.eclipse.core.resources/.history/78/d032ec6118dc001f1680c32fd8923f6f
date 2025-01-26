@@ -1,0 +1,72 @@
+package com.cab;
+
+import com.cab.controller.CabBookingController;
+import com.cab.model.Cab;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+public class CabBookingControllerTest {
+
+    private MockMvc mockMvc;
+
+    @Mock
+    private RestTemplate restTemplate;
+
+    @InjectMocks
+    private CabBookingController cabBookingController;
+
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(cabBookingController).build();
+    }
+
+    @Test
+    public void testBookCab() throws Exception {
+        // Prepare mock data for the cab
+        Cab cab = new Cab();
+        cab.setSource("London");
+        cab.setDestination("Manchester");
+
+        // Prepare mock response
+        Map<String, Object> cabBookingResponse = new HashMap<>();
+        cabBookingResponse.put("id", 1L);
+        cabBookingResponse.put("source", "London");
+        cabBookingResponse.put("destination", "Manchester");
+        cabBookingResponse.put("fare", 45.5);
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("message", "Booking Successful!");
+        responseData.put("cabBooking", cabBookingResponse);
+
+        // Mock the RestTemplate response (postForEntity)
+        when(restTemplate.postForEntity(anyString(), eq(cab), eq(Map.class)))
+            .thenReturn(ResponseEntity.ok(responseData));
+
+        // Perform the POST request and verify the response
+        mockMvc.perform(post("/cab-booking/book-cab")
+                        .param("source", "London")
+                        .param("destination", "Manchester"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("message", "Booking Successful!"))
+                .andExpect(model().attribute("cabBooking", cabBookingResponse))
+                .andExpect(view().name("bookCab"));
+
+        // Verify that the RestTemplate was called once
+        verify(restTemplate, times(1)).postForEntity(anyString(), eq(cab), eq(Map.class));
+    }
+}
